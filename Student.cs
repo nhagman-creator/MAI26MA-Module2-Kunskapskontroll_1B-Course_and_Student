@@ -1,48 +1,38 @@
-internal class Student //Only for this project, just for clarity (internal is already default according to google). All other public fields/properties/methods in this class will be encapsulated by this "internal" class statement
+internal class Student //Ment only for this project, and just for clarity (internal is already default according to google). All other public fields/properties/methods in this class will be encapsulated by this "internal" class statement
 {
-    private string _name;//Hidden field only for the created instance/object. Already set to private by default (this is just to clarify)    List<string> courses
+//*************** FIELDS ******************
+    private readonly string? _studentName; //Hidden field created only once and cannot change. Already set to private by default (this is just to clarify). No need for a method to set the name after creating the Course instance
 
-    public static List<string> Courses = []; //local student "database" accessible within the project, and that exists only temporarily when the program is running
+    public List<string> Courses = []; //local "Courses database" will be publically accessible by other classes/objects (i.e. objects instanciiated by the class Student). This property and the wrapped field will be accessible only within the current project (due to being wrapped in the "internal" class statement). This enrolled "course database" will cease to exist when the program ends
 
-    public Student (string name) //constructor that accepts the student name argument
+
+//************** CONSTRUCTOR *************   
+
+    public Student (string testStudentName) //constructor that accepts the student name argument
     {
-        NameExists = name;
-    }
-
-    //the student name argument is passed on to the Property so it can be checked with a condition (if the student already exists)
-    public string NameExists
-    {
-        get
+        //simple check for null/empty/whitespace/tabs 
+        if (string.IsNullOrWhiteSpace(testStudentName))
         {
-            return NameExists;
+            _studentName = "invalid";
         }
-        set
+        else
         {
-            //check if the student already exist, if not true, save the hidden field _name
-            if(!Course.students.Contains(value))
-            {
-                _name = value;
-            }
-            else
-            {   
-                //else student exists (or upgrade the code to CALL A FUNCTION for repeating reader input until valid name that is not null)
-                Console.WriteLine("The student is already registered.\nReturning to main menu");
-            }
+            _studentName = testStudentName;
         }
     }
-
+//************* METHODS ******************
     //method to join a course, check conditions for doublet names
-    public void Join(string course)
+    public void Join(string course, Course courseName)
     {
-        Student.Courses.Add(course);
-        Course.students.Add(_name);
+        Courses.Add(course);
+        courseName.Students.Add(_studentName!); //Note: _studentName cannot be null, constructor does not allow that
     }
 
     //method to leave a course
-     public void Leave(string course)
+     public void Leave(string course, Course courseName)
     {
-        Student.Courses.Remove(course);
-        Course.students.Remove(_name);
+        Courses.Remove(course);
+        courseName.Students.Remove(_studentName!); //Note: _studentName cannot be null, constructor does not allow that
     }
 
     //method to print all courses that the current student is attending
