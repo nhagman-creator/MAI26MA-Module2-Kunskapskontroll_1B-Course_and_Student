@@ -6,9 +6,9 @@ internal class Course //This class is meant only for this project. Just for clar
 //************ Property (standard) ***********  
 
 //************ Property (auto-implemented) ***********  
-    public int MaxSeats {get;set;} = 30; //Preset to 30. For additional conditions, such as reject negative values etc.., wrapping the field in additional conditional properties will be required. For now a default value 30, and an option to change it will suffice
+    public int MaxSeats {get;set;} = 3; //Preset to 3 to reach the course-capacity easier. For additional conditions, such as reject negative values etc.., wrapping the field in additional conditional properties will be required. For now a default value 3, and an option to change it will suffice
     
-    public List<string> Students {get; private set;} = []; //local enrolled students "database" will be publically accessible by other classes/objects (i.e. objects instanciiated by the class Student). This property and the wrapped field will be accessible only within this current project (due to whole class being wrapped in the "internal" statement). This enrolled "students database" will cease to exist when the program ends
+    public List<string> Students {get; set;} = []; //local enrolled students "database" will be publically accessible by other classes/objects (i.e. objects instanciiated by the class Student). This property and the wrapped field will be accessible only within this current project (due to whole class being wrapped in the "internal" statement). This enrolled "students database" will cease to exist when the program ends
 
  //************** CONSTRUCTOR *************   
     public Course (string testCourseName)
@@ -16,7 +16,7 @@ internal class Course //This class is meant only for this project. Just for clar
         //simple check for null/empty/whitespace/tabs. Note, this check probably makes more sense to do this with a try-catch, so that the object does not need to be created at all if the name is not valid. This could be combined with other conditions to avoid course-duplicates etc..
         if (string.IsNullOrWhiteSpace(testCourseName))
         {
-            _courseName = "invalid";
+            _courseName = "invalid"; //Usefull if there is time to integrate a menu at some point (optional)
         }
         else
         {
@@ -33,7 +33,7 @@ internal class Course //This class is meant only for this project. Just for clar
         {
             Console.WriteLine($"{studentName} has already been registered to {_courseName}");
         }
-        else if(Students.Count == MaxSeats)
+        else if(Students.Count >= MaxSeats)
         {
             Console.WriteLine($"{_courseName} is full, {studentName} can not be added to this course");
         }
@@ -49,18 +49,18 @@ internal class Course //This class is meant only for this project. Just for clar
     {
         if(Students.Remove(studentName))
         {
-            student.Courses.Remove(studentName); //Sync with the student object
+            student.Courses.Remove(_courseName!); //Sync with the list in student object
         }
         else
         {
-            Console.WriteLine($"{student} does not exist");
+            Console.WriteLine($"Cannot remove {studentName} from {_courseName}, he is not enrolled");
         }
     }
     
     //Method to print all students in the course
     public void RollCall()
     {
-        Console.WriteLine($"These are all students enrolled in {_courseName}:");
+        Console.WriteLine($"All students enrolled in {_courseName}:");
         foreach(string student in Students)
         {
             Console.WriteLine(student);
@@ -70,7 +70,7 @@ internal class Course //This class is meant only for this project. Just for clar
     //Method to override ToString and return the name of the current object instead, without the full path. To be combined i.e. with "(current student number/maxSeats)
     public override string ToString()
     {
-        string courseName = this.GetType().Name; //get the "name" from the "(Get)Type" path of "this" current object. Dynamic code that always point to the current object name.
+        string? courseName = this._courseName; //get the _courseName from "this" current object. Dynamic code that always point to name-field of this current object..
         return $"{courseName} ({Students.Count}/{MaxSeats} places)";
     }
 }

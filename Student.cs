@@ -6,7 +6,7 @@ internal class Student //Ment only for this project, and just for clarity (inter
 //************ Property (standard) ***********  
 
 //************ Property (auto-implemented) ***********  
-    public List<string> Courses {get; private set;} = []; //local "Courses database" will be publically accessible by other classes/objects (i.e. objects instanciiated by the class Course). This property and the wrapped field will be accessible only within the current project (due to being wrapped in the "internal" class statement). This "courses database" will cease to exist when the program ends
+    public List<string> Courses {get; set;} = []; //local "Courses database" will be publically accessible by other classes/objects (i.e. objects instanciiated by the class Course). This property and the wrapped field will be accessible only within the current project (due to being wrapped in the "internal" class statement). This "courses database" will cease to exist when the program ends
 
 
 //************** CONSTRUCTOR *************   
@@ -16,7 +16,7 @@ internal class Student //Ment only for this project, and just for clarity (inter
         //simple check for null/empty/whitespace/tabs. Note, this check probably makes more sense to do this with a try-catch, so that the object does not need to be created at all if the name is not valid. This could be combined with other conditions to avoid duplicated students etc..
         if (string.IsNullOrWhiteSpace(testStudentName))
         {
-            _studentName = "invalid";
+            _studentName = "invalid"; //Usefull if there is time to integrate a menu at some point (optional)
         }
         else
         {
@@ -31,7 +31,7 @@ internal class Student //Ment only for this project, and just for clarity (inter
         {
             Console.WriteLine($"{_studentName} has already been registered to {courseName}");
         }
-        else if(course.Students.Count == course.MaxSeats)
+        else if(course.Students.Count >= course.MaxSeats)
         {
             Console.WriteLine($"{courseName} is full, {_studentName} can not be added to this course");
         }
@@ -47,11 +47,11 @@ internal class Student //Ment only for this project, and just for clarity (inter
     {
         if(Courses.Remove(course))
         {
-        courseName.Students.Remove(_studentName!); //Sync with the Course object. Note: _studentName cannot be null, constructor does not allow that
+        courseName.Students.Remove(_studentName!); //Sync with the list in Course object. Note: _studentName cannot be null, constructor does not allow that
         }
         else
         {
-            Console.WriteLine($"{_studentName} does not exist");
+            Console.WriteLine($"{_studentName} does not exist in in this course");
         }
     }
     
@@ -68,7 +68,8 @@ internal class Student //Ment only for this project, and just for clarity (inter
     //Method to override ToString and return the name of the current object instead, without the full path. To be combined i.e. with "(current student number/maxSeats)
     public override string ToString()
     {
-        string courseName = this.GetType().Name; //get the "name" from the "(Get)Type" path of "this" current object. Dynamic code that always point to the current object name.
-        return courseName;
+        //string studentName = this.GetType().Name; //get the "name" from the "(Get)Type" path of "this" current object. Dynamic code that always point to the current object name.
+        //return studentName;
+        return this._studentName!; //get the _studentName from "this" current object. Dynamic code that always point to name-field of this current object..
     }
 }
